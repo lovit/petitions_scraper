@@ -1,3 +1,6 @@
+import time
+from .config import SLEEP
+from .config import VERBOSE
 from .utils import get_soup
 
 def get_petition_links(max_pages=10):
@@ -19,5 +22,11 @@ def get_petition_links(max_pages=10):
                 links.append(link)
             except:
                 continue
+
+        if p % 10 == 0:
+            time.sleep(SLEEP)
+
+        if VERBOSE:
+            print('get petitions links from {} / {} pages'.format(p, max_pages)
 
     return links

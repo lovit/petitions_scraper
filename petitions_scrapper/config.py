@@ -1,0 +1,2 @@
+SLEEP = 1
+VERBOSE = True
