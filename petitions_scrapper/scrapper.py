@@ -30,5 +30,7 @@ def get_petition_links(begin_page=1, end_page=10):
 
         if VERBOSE:
             print('\rget petitions links from {} / {} pages'.format(p, max_pages), end='')
+            if p % 100 == 0:
+                print()
 
     return links
