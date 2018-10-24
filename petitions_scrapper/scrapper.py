@@ -15,7 +15,12 @@ def get_petition_links(begin_page=1, end_page=10):
     links = []
     for p in range(begin_page, end_page + 1):
         url = 'https://www1.president.go.kr/petitions?page={}'.format(p)
-        soup = get_soup(url)
+
+        try:
+            soup = get_soup(url)
+        except:
+            print('\nException while getting soup page=%d' % p)
+
         div = soup.select('div[class^=board]')
         for li in soup.select('div[class^=b_list] div[class=bl_body] li'):
             try:
@@ -34,4 +39,5 @@ def get_petition_links(begin_page=1, end_page=10):
             if p % 100 == 0:
                 print()
 
+    print('\ngetting petition links was done')
     return links
