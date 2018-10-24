@@ -29,7 +29,8 @@ def get_petition_links(begin_page=1, end_page=10):
         time.sleep(0.05) # default sleep
 
         if VERBOSE:
-            print('\rget petitions links from {} / {} pages'.format(p, max_pages), end='')
+            print('\rget petitions links from {} in ({} - {}) pages'.format(
+                p, begin_page, end_page), end='')
             if p % 100 == 0:
                 print()
 
