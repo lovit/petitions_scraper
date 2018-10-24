@@ -1,2 +1,2 @@
-SLEEP = 1.5
+SLEEP = 3
 VERBOSE = True
