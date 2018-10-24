@@ -9,7 +9,8 @@ def get_petition_links(max_pages=10):
         category = li.select('div[class^=bl_category]')[0].text[2:].strip() # remove '분류'
         petition_num = int(li.select('div[class=bl_no]')[0].text[2:].strip()) # remove '번호'
         title = li.select('a')[0].text[2:].strip() # remove '제목'
-        return (category, petition_num, title)
+        url = 'https://www1.president.go.kr/petitions/%d' % petition_num
+        return (category, title, url)
 
     links = []
     for p in range(1, max_pages + 1):
@@ -25,8 +26,9 @@ def get_petition_links(max_pages=10):
 
         if p % 10 == 0:
             time.sleep(SLEEP)
+        time.sleep(0.05) # default sleep
 
         if VERBOSE:
-            print('get petitions links from {} / {} pages'.format(p, max_pages)
+            print('\rget petitions links from {} / {} pages'.format(p, max_pages), end='')
 
     return links
