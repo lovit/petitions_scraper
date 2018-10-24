@@ -3,7 +3,7 @@ from .config import SLEEP
 from .config import VERBOSE
 from .utils import get_soup
 
-def get_petition_links(max_pages=10):
+def get_petition_links(begin_page=1, end_page=10):
 
     def parse_link(li):
         category = li.select('div[class^=bl_category]')[0].text[2:].strip() # remove '분류'
@@ -13,7 +13,7 @@ def get_petition_links(max_pages=10):
         return (category, title, url)
 
     links = []
-    for p in range(1, max_pages + 1):
+    for p in range(begin_page, end_page + 1):
         url = 'https://www1.president.go.kr/petitions?page={}'.format(p)
         soup = get_soup(url)
         div = soup.select('div[class^=board]')
