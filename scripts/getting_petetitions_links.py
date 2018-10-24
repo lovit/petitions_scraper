@@ -8,14 +8,14 @@ from petitions_scrapper import get_petition_links
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--link_file', type=str, default='links.csv')
+    parser.add_argument('--filename', type=str, default='links')
     parser.add_argument('--begin_page', type=int, default=1)
     parser.add_argument('--end_page', type=int, default=10)
 
-    args = parser.parse_args()
-    path = args.link_file
+    args = parser.parse_args()    
     begin_page = args.begin_page
     end_page = args.end_page
+    path = args.filename + '%d_%d.csv' % (begin_page, end_page)
 
     dirname = os.path.dirname(os.path.abspath(path))
     if not os.path.exists(dirname):
