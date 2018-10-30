@@ -3,8 +3,8 @@ import os
 import sys
 sys.path.append('../')
 
-from petitions_scrapper import parse_page
-from petitions_scrapper import get_petition_links
+from petitions_scraper import parse_page
+from petitions_scraper import get_petition_links
 
 def main():
     parser = argparse.ArgumentParser()

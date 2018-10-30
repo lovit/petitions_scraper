@@ -8,7 +8,7 @@
 
 청와대 청원 게시판의 최근 청원 목록을 가져옵니다. 최근 청원 목록의 begin_page 부터 end_page 까지의 목록을 가져옵니다.
 
-    from petitions_scrapper import get_petition_links
+    from petitions_scraper import get_petition_links
 
     links = get_petition_links(begin_page=1, end_page=3)
 
@@ -36,7 +36,7 @@ parse_page 함수에 청원 페이지의 url 을 입력하면 아래의 정보�
 | replies | 청원 댓글 |
 | status | 현재 청원 진행 상황 (청원시작, 청원진행중, 청원종료, 브리핑) |
 
-    from petitions_scrapper import parse_page
+    from petitions_scraper import parse_page
 
     url = 'https://www1.president.go.kr/petitions/407329'
     parse_page(url)
