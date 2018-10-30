@@ -20,15 +20,21 @@ def get_petition_links(begin_page=1, end_page=10):
             soup = get_soup(url)
         except:
             print('\nException while getting soup page=%d' % p)
+            continue
 
-        div = soup.select('div[class^=board]')[1]
-        lis = div.select('div[class^=b_list] div[class=bl_body] li')
-        for li in lis:
-            try:
-                link = parse_link(li)
-                links.append(link)
-            except:
-                continue
+        try:
+            div = soup.select('div[class^=board]')[1]
+            lis = div.select('div[class^=b_list] div[class=bl_body] li')
+            for li in lis:
+                try:
+                    link = parse_link(li)
+                    links.append(link)
+                except:
+                    continue
+        except Exception as e:
+            print('Exception while parsing link')
+            print(e)
+            continue
 
         if p % 50 == 0:
             time.sleep(SLEEP)
