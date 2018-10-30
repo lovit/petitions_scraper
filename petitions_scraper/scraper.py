@@ -7,9 +7,9 @@ def get_petition_links(begin_page=1, end_page=10):
 
     def parse_link(li):
         category = li.select('div[class^=bl_category]')[0].text[2:].strip() # remove '분류'
-        petition_num = int(li.select('div[class=bl_no]')[0].text[2:].strip()) # remove '번호'
         title = li.select('a')[0].text[2:].strip() # remove '제목'
-        url = 'https://www1.president.go.kr/petitions/%d' % petition_num
+        href = li.select('a')[0]['href']
+        url = href.split('?')[0]
         return (category, title, url)
 
     links = []
@@ -21,8 +21,9 @@ def get_petition_links(begin_page=1, end_page=10):
         except:
             print('\nException while getting soup page=%d' % p)
 
-        div = soup.select('div[class^=board]')
-        for li in soup.select('div[class^=b_list] div[class=bl_body] li'):
+        div = soup.select('div[class^=board]')[1]
+        lis = div.select('div[class^=b_list] div[class=bl_body] li')
+        for li in lis:
             try:
                 link = parse_link(li)
                 links.append(link)
