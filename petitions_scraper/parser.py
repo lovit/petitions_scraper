@@ -28,21 +28,23 @@ def parse_page(url, include_replies=False, remove_agree_phrase=True):
 
     crawled_at = now()
     category, begin, end = parse_meta(soup)
+    title = soup.select('h3[class=petitionsView_title]')[0].text
     content = parse_content(soup)
     num_agree = parse_number_of_agree(soup)
+    petition_idx = url.split('/')[-1]
     status = parse_status(soup)
     if include_replies:
         replies = get_replies(soup, url, num_agree, remove_agree_phrase)
     else:
         replies = None
 
-    json_format = _as_json(crawled_at, category, begin,
-        end, content, num_agree, status, replies)
+    json_format = _as_json(crawled_at, category, begin, end,
+        content, num_agree, petition_idx, status, replies, title)
 
     return json_format
 
-def _as_json(crawled_at, category, begin, end,
-    content, num_agree, status, replies):
+def _as_json(crawled_at, category, begin, end, content,
+    num_agree, petition_idx, status, replies, title):
 
     json_format = {
         'crawled_at' : crawled_at,
@@ -51,7 +53,9 @@ def _as_json(crawled_at, category, begin, end,
         'end' : end,
         'content' : content,
         'num_agree' : num_agree,
-        'status' : status
+        'petition_idx': petition_idx,
+        'status' : status,
+        'title': title
     }
 
     if replies is None:
