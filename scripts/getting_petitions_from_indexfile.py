@@ -26,7 +26,7 @@ def main():
     with open('categories.json', encoding='utf-8') as f:
         category_dictionary = json.load(f)
 
-    args = parser.parse_args()    
+    args = parser.parse_args()
     index_filename = args.index_filename
     output_directory = args.output_directory
     remove_agree_phrase = not args.include_agree_phrase
