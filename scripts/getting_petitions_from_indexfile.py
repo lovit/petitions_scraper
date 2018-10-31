@@ -64,7 +64,6 @@ def main():
     # scraping
     for i, url in enumerate(urls):
 
-        print(url)
         # get a petition
         try:
             petition = parse_page(url, include_replies=True,
@@ -75,7 +74,7 @@ def main():
 
         # save scraped result
         petition_idx = url.split('/')[-1]
-        output_path = '%s/%s' % (output_directory, petition_idx)
+        output_path = '%s/%s.json' % (output_directory, petition_idx)
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(petition, f, indent=2, ensure_ascii=False)
 
@@ -83,9 +82,10 @@ def main():
         if debug and i > 10:
             break
         # verbose
-        if i % 100 == 0:
+        if i % 20 == 0:
             print('scrapping {} / {} petitions'.format(i+1, len(urls)))
             time.sleep(5)
+        time.sleep(0.5)
 
 
 if __name__ == '__main__':
