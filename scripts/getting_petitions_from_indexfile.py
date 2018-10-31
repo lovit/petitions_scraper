@@ -20,6 +20,7 @@ def main():
                         action='store_true')
     parser.add_argument('--debug', dest='debug', action='store_true')
     parser.add_argument('--sleep', type=float, default=1.0)
+    parser.add_argument('--skip', type=int, default=0)
 
     with open('categories.json', encoding='utf-8') as f:
         category_dictionary = json.load(f)
@@ -30,6 +31,7 @@ def main():
     remove_agree_phrase = not args.include_agree_phrase
     debug = args.debug
     sleep = args.sleep
+    skip = args.skip
     categories = args.category_numbers
     categories = categories.split('_')
 
@@ -63,6 +65,10 @@ def main():
 
     # scraping
     for i, url in enumerate(urls):
+
+        # skip
+        if i < skip:
+            continue
 
         # get a petition
         try:
