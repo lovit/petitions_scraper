@@ -107,7 +107,7 @@ def get_replies(soup, url, num_replies=0, remove_agree_phrase=False):
         replies += replies_
         time.sleep(0.05)
         if p % 10 == 0:
-            print('\rpetition = {}, reply pages = {} / {}'.format(
+            print('\r  - petition = {}, reply pages = {} / {}'.format(
                 petition_idx, p, num_pages), end='')
     return replies
 
