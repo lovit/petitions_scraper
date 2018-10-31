@@ -1,4 +1,5 @@
 import math
+import time
 
 from .utils import get_soup
 from .utils import now
@@ -103,6 +104,7 @@ def get_replies(soup, url, num_replies=0, remove_agree_phrase=False):
         if remove_agree_phrase:
             replies_ = [r for r in replies_ if not is_agree_phrase(r)]
         replies += replies_
+        time.sleep(0.05)
     return replies
 
 def is_agree_phrase(text):
