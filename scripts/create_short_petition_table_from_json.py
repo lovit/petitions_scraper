@@ -49,6 +49,7 @@ def main():
     if not os.path.exists(dirname):
         os.makedirs(dirname)
     with open(table_path, 'w', encoding='utf-8') as f:
+        f.write('\t'.join(keys)+'\n')
         for row in rows:
             f.write('{}\n'.format(row))
 
