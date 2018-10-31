@@ -93,7 +93,7 @@ def main():
             break
         # verbose
         if i % 20 == 0:
-            print('scrapping {} / {} petitions'.format(i+1, len(urls)))
+            print('\rscrapping {} / {} petitions{}'.format(i+1, len(urls), ' '*40))
             time.sleep(5)
         time.sleep(0.5)
 
