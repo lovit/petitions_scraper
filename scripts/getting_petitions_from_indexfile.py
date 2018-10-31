@@ -20,7 +20,8 @@ def main():
                         action='store_true')
     parser.add_argument('--debug', dest='debug', action='store_true')
     parser.add_argument('--sleep', type=float, default=1.0)
-    parser.add_argument('--skip', type=int, default=0)
+    parser.add_argument('--begin_index', type=int, default=0)
+    parser.add_argument('--end_index', type=int, default=-1)
 
     with open('categories.json', encoding='utf-8') as f:
         category_dictionary = json.load(f)
@@ -31,7 +32,8 @@ def main():
     remove_agree_phrase = not args.include_agree_phrase
     debug = args.debug
     sleep = args.sleep
-    skip = args.skip
+    begin_index = args.begin_index
+    end_index = args.end_index
     categories = args.category_numbers
     categories = categories.split('_')
 
@@ -67,8 +69,10 @@ def main():
     for i, url in enumerate(urls):
 
         # skip
-        if i < skip:
+        if i < begin_index:
             continue
+        if end_index >= 0 and end_index < i:
+            break
 
         # get a petition
         try:
