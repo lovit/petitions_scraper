@@ -18,7 +18,7 @@ class ShortPetition(
 def get_value(obj, key):
     value = obj[key]
     if isinstance(value, str):
-        value = value.replace('\t', ' ').strip()
+        value = value.replace('\t', ' ').replace('\n', ' ').strip()
     return value
 
 def get_values(obj, keys):
@@ -48,8 +48,6 @@ def main():
         with open(path, encoding='utf-8') as f:
             json_obj = json.load(f)
         petition = ShortPetition(*get_values(json_obj, keys))
-        if not petition[0].strip() or not petition[1].strip():
-            continue
         rows.append(petition)
     rows = sorted(rows, key=lambda x:int(x.petition_idx))
 
