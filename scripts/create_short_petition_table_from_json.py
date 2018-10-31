@@ -10,10 +10,16 @@ class ShortPetition(
         'petition_idx status begin end category num_agree title')):
 
     def __str__(self):
-        return '\t'.join([str(v) for v in self])
+        strf = '\t'.join([str(v) for v in self])
+        if len(strf.split('\t')) != 7:
+            return '\t'*6
+        return strf
 
 def get_value(obj, key):
-    return obj[key]
+    value = obj[key]
+    if isinstance(value, str):
+        value = value.replace('\t', ' ').strip()
+    return value
 
 def get_values(obj, keys):
     return tuple(get_value(obj, key) for key in keys)
@@ -41,7 +47,10 @@ def main():
     for path in json_paths:
         with open(path, encoding='utf-8') as f:
             json_obj = json.load(f)
-        rows.append(ShortPetition(*get_values(json_obj, keys)))
+        petition = ShortPetition(*get_values(json_obj, keys))
+        if not petition[0].strip() or not petition[1].strip():
+            continue
+        rows.append(petition)
     rows = sorted(rows, key=lambda x:int(x.petition_idx))
 
     # save as table
