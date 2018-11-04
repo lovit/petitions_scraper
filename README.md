@@ -8,9 +8,11 @@
 
 청와대 청원 게시판의 최근 청원 목록을 가져옵니다. 최근 청원 목록의 begin_page 부터 end_page 까지의 목록을 가져옵니다.
 
-    from petitions_scraper import get_petition_links
+```python
+from petitions_scraper import get_petition_links
 
-    links = get_petition_links(begin_page=1, end_page=3)
+links = get_petition_links(begin_page=1, end_page=3)
+```
 
 links 는 (카테고리, 제목, url) 의 tuple 로 이뤄져 있습니다.
 
@@ -36,10 +38,12 @@ parse_page 함수에 청원 페이지의 url 을 입력하면 아래의 정보�
 | replies | 청원 댓글 |
 | status | 현재 청원 진행 상황 (청원시작, 청원진행중, 청원종료, 브리핑) |
 
-    from petitions_scraper import parse_page
+```python
+from petitions_scraper import parse_page
 
-    url = 'https://www1.president.go.kr/petitions/407329'
-    parse_page(url)
+url = 'https://www1.president.go.kr/petitions/407329'
+parse_page(url)
+```
 
     {'begin': '2018-10-15',
      'category': '경제민주화',
@@ -51,7 +55,9 @@ parse_page 함수에 청원 페이지의 url 을 입력하면 아래의 정보�
 
 parse_page 함수의 include_replies=True 로 설정하면 청원의 댓글을 함께 수집합니다.
 
-    parse_page(url, include_replies=True)
+```python
+parse_page(url, include_replies=True)
+```
 
     {'begin': '2018-10-15',
      'category': '경제민주화',
@@ -72,7 +78,9 @@ parse_page 함수의 include_replies=True 로 설정하면 청원의 댓글을 �
 
 parse_page 함수의 remove_agree_phrase=True 를 추가로 설정하면 청원의 댓글 중 '동의합니다.'와 같은 일반적인 표현은 제거되어 출력됩니다.
 
-    parse_page(url, include_replies=True, remove_agree_phrase=True)
+```python
+parse_page(url, include_replies=True, remove_agree_phrase=True)
+```
 
     {'begin': '2018-10-15',
      'category': '경제민주화',
@@ -85,17 +93,21 @@ parse_page 함수의 remove_agree_phrase=True 를 추가로 설정하면 청원�
 
 일반적인 동의 표현의 규칙은 아래와 같습니다.
 
-    def is_agree_phrase(text):
-        has_term = '동의' in text
-        return has_term and len(text) <= 10
+```python
+def is_agree_phrase(text):
+    has_term = '동의' in text
+    return has_term and len(text) <= 10
+```
 
 ### 청원 카테고리 살펴보기
 
 현재 청원 게시판에 등록되어 있는 카테고리를 살펴볼 수 있습니다.
 
+```python
     from petitions_scrapper import show_categories
 
     show_categories()
+```
 
     idx = 0  , name = 전체
     idx = 35 , name = 정치개혁
