@@ -14,7 +14,7 @@ def main():
                         default='../data/petition_links.csv')
     parser.add_argument('--output_directory', type=str,
                         default='../output/')
-    parser.add_argument('--category_numbers', type=str, default='36',
+    parser.add_argument('--category_numbers', type=str, default='all',
                         help='_ separated category idx')
     parser.add_argument('--include_agree_phrase', dest='include_agree_phrase',
                         action='store_true')
@@ -35,7 +35,10 @@ def main():
     begin_index = args.begin_index
     end_index = args.end_index
     categories = args.category_numbers
-    categories = categories.split('_')
+    if categories == 'all':
+        categories = list(category_dictionary.keys())
+    else:
+        categories = categories.split('_')
 
     # check category idx
     for c in categories:
