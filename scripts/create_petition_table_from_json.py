@@ -17,7 +17,7 @@ class ShortPetition(
 
 class LongPetition(
     collections.namedtuple('LongPetition',
-        'idx status begin end category num_agree title content')):
+        'petition_idx status begin end category num_agree title content')):
 
     def __str__(self):
         return '\t'.join([str(v) for v in self])
@@ -47,6 +47,8 @@ def main():
     keys_short = 'petition_idx status begin end category num_agree title'.split()
     keys_long = 'petition_idx status begin end category num_agree title content'.split()
 
+    keys = keys_long if long else keys_short
+
     # get json paths
     json_paths = glob.glob('{}/*.json'.format(json_directory))
     if debug:
@@ -58,9 +60,9 @@ def main():
         with open(path, encoding='utf-8') as f:
             json_obj = json.load(f)
         if long:
-            petition = LongPetition(*get_values(json_obj, keys_long))
+            petition = LongPetition(*get_values(json_obj, keys))
         else:
-            petition = ShortPetition(*get_values(json_obj, keys_short))
+            petition = ShortPetition(*get_values(json_obj, keys))
         rows.append(petition)
     rows = sorted(rows, key=lambda x:int(x.petition_idx))
 
