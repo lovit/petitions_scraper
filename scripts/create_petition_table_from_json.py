@@ -25,7 +25,7 @@ class LongPetition(
 def get_value(obj, key):
     value = obj[key]
     if isinstance(value, str):
-        value = value.replace('\t', ' ').replace('\n', ' ').strip()
+        value = value.replace('\t', ' ').replace('\n', ' ').replace('\r', ' ').strip()
     return value
 
 def get_values(obj, keys):
