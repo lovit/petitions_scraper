@@ -1,6 +1,6 @@
 # 청와대 국민청원 수집기
 
-청와대 국민청원 (https://www1.president.go.kr/petitions) 홈페이지에 올라온 청원의 내용 / 공감 개수 / 댓글을 수집합니다.
+청와대 국민청원 (https://www1.president.go.kr/petitions) 홈페이지에 올라온 청원의 내용 / 공감 개수 / 댓글을 수집하는, 파이썬 (Python) 으로 구현된 청와대 국민청원 크롤러 입니다. 
 
 ## Usage
 
