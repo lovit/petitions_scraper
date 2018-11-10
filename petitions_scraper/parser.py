@@ -94,7 +94,7 @@ def parse_status(soup):
             return name
     return 'Exception'
 
-def get_replies(soup, url, num_replies=0, remove_agree_phrase=False):
+def get_replies(soup, url, num_replies=0, remove_agree_phrase=False, sleep=0.05):
     replies = []
     petition_idx = url.split('/')[-1]
     num_pages = math.ceil(num_replies/10)
@@ -105,7 +105,7 @@ def get_replies(soup, url, num_replies=0, remove_agree_phrase=False):
         if remove_agree_phrase:
             replies_ = [r for r in replies_ if not is_agree_phrase(r)]
         replies += replies_
-        time.sleep(0.05)
+        time.sleep(sleep)
         if p % 10 == 0:
             print('\r  - petition = {}, reply pages = {} / {}'.format(
                 petition_idx, p, num_pages), end='')
