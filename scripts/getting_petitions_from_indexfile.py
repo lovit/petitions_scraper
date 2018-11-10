@@ -16,6 +16,8 @@ def main():
                         default='../output/')
     parser.add_argument('--category_numbers', type=str, default='all',
                         help='_ separated category idx')
+    parser.add_argument('--without_replies', dest='without_replies',
+                        action='store_true')
     parser.add_argument('--include_agree_phrase', dest='include_agree_phrase',
                         action='store_true')
     parser.add_argument('--debug', dest='debug', action='store_true')
@@ -30,6 +32,7 @@ def main():
     index_filename = args.index_filename
     output_directory = args.output_directory
     remove_agree_phrase = not args.include_agree_phrase
+    get_replies = not args.without_replies
     debug = args.debug
     sleep = args.sleep
     begin_index = args.begin_index
@@ -79,7 +82,7 @@ def main():
 
         # get a petition
         try:
-            petition = parse_page(url, include_replies=True,
+            petition = parse_page(url, include_replies=get_replies,
                 remove_agree_phrase=remove_agree_phrase)
         except Exception as e:
             # ignore deleted page
