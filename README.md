@@ -137,3 +137,19 @@ idx = 49 , name = 인권/성평등
 idx = 50 , name = 문화/예술/체육/언론
 idx = 51 , name = 기타
 ```
+
+### Script 를 이용한 청원 수집
+
+다음의 argument 를 입력하여 청와대 청원 데이터를  directory 에 수집할 수 있습니다. 이전에 수집된 데이터를 바탕으로 이전 시점에 `청원진행중` 이었던 데이터까지 수집합니다. 청원완료된 데이터는 변하지 않기 때문에 그대로 둡니다.
+
+| Argument | Type | Default | Help |
+| --- |--- |--- |--- |
+| directory | str | 'output' | 'JSON storage directory' |
+| begin_page | int | 1 | 'First page number' |
+| end_page | int | 10 | 'Last page number' |
+| sleep | float | 1 | 'Sleep time for each petitions' |
+| verbose | Boolean | 'verbose' | action='store_true' |
+
+```
+python scraping_petitions.py --verbose --directory test --end_page 3
+```
