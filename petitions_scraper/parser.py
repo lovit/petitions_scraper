@@ -94,21 +94,26 @@ def parse_status(soup):
             return name
     return 'Exception'
 
-def get_replies(soup, url, num_replies=0, remove_agree_phrase=False, sleep=0.05):
+def get_replies(soup, url, num_replies=0, remove_agree_phrase=False, sleep=0.1):
     replies = []
     petition_idx = url.split('/')[-1]
     num_pages = math.ceil(num_replies/10)
     for p in range(1, num_pages + 1):
-        url_ = url + '?page=%d' % p
-        soup_replies = get_soup(url_)
-        replies_ = _parse_replies(soup_replies)
-        if remove_agree_phrase:
-            replies_ = [r for r in replies_ if not is_agree_phrase(r)]
-        replies += replies_
-        time.sleep(sleep)
-        if p % 10 == 0:
-            print('\r  - petition = {}, reply pages = {} / {}'.format(
-                petition_idx, p, num_pages), end='')
+        try:
+            url_ = url + '?page=%d' % p
+            soup_replies = get_soup(url_)
+            replies_ = _parse_replies(soup_replies)
+            if remove_agree_phrase:
+                replies_ = [r for r in replies_ if not is_agree_phrase(r)]
+            replies += replies_
+            time.sleep(sleep)
+            if p % 10 == 0:
+                print('\r  - petition = {}, reply pages = {} / {}'.format(
+                    petition_idx, p, num_pages), end='')
+        except Exception as e:
+            print(e)
+            print('Unexpected exception (get_replies). Sleep 5 minutes')
+            time.sleep(300)
     return replies
 
 def is_agree_phrase(text):
