@@ -1,6 +1,4 @@
 import time
-from .config import SLEEP
-from .config import VERBOSE
 from .utils import get_soup
 
 def parse_link(li):
@@ -10,7 +8,7 @@ def parse_link(li):
     url = href.split('?')[0]
     return (category, title, url)
 
-def yield_petition_links(begin_page=1, end_page=10):
+def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
     for p in range(begin_page, end_page + 1):
         url = 'https://www1.president.go.kr/petitions?page={}'.format(p)
         try:
@@ -33,18 +31,16 @@ def yield_petition_links(begin_page=1, end_page=10):
             print(e)
             continue
 
-        if p % 50 == 0:
-            time.sleep(SLEEP)
-        time.sleep(0.8) # default sleep
+        time.sleep(sleep)
 
-        if VERBOSE:
+        if verbose:
             print('\rget petitions links from {} in ({} - {}) pages'.format(
                 p, begin_page, end_page), end='')
             if p % 100 == 0:
                 print()
 
 
-def get_petition_links(begin_page=1, end_page=10):
-    links = [link for link in yield_petition_links(begin_page, end_page)]
+def get_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
+    links = [link for link in yield_petition_links(begin_page, end_page, sleep, verbose)]
     print('\ngetting petition links was done')
     return links
