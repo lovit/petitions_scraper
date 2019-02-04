@@ -43,7 +43,7 @@ def main():
                 break
 
             # get petition
-            petition = parse_page(url, include_replies=True, remove_agree_phrase=False)
+            petition = parse_page(url, include_replies=False, remove_agree_phrase=False)
 
             # save
             path = '{}/{}.json'.format(directory, index)
