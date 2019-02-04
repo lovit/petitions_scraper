@@ -9,6 +9,22 @@ def parse_link(li):
     return (category, title, url)
 
 def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
+    """
+    Arguments
+    ---------
+    begin_page : int
+        First page number
+    end_page : int
+        Last page number
+    sleep : float
+        Sleep time for each page
+    verbose : Boolean
+        If True, it shows status
+
+    Yields
+    ------
+    (category, title, url)
+    """
     for p in range(begin_page, end_page + 1):
         url = 'https://www1.president.go.kr/petitions?page={}'.format(p)
         try:
@@ -41,6 +57,23 @@ def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
 
 
 def get_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
+    """
+    Arguments
+    ---------
+    begin_page : int
+        First page number
+    end_page : int
+        Last page number
+    sleep : float
+        Sleep time for each page
+    verbose : Boolean
+        If True, it shows status
+
+    Returns
+    ------
+    list of links. Each link is three column tuple. (category, title, url)
+    """
+
     links = [link for link in yield_petition_links(begin_page, end_page, sleep, verbose)]
     print('\ngetting petition links was done')
     return links
