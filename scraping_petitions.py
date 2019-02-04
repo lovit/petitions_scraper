@@ -52,7 +52,7 @@ def main():
 
             # verbose print
             if verbose:
-                print('scraped {}'.format(url))
+                print('scraped {} (~ {})'.format(index, last_index))
 
             # sleep
             time.sleep(sleep)
