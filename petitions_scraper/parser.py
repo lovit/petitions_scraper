@@ -84,7 +84,7 @@ def parse_number_of_agree(soup):
     agree = soup.select('div[class=Reply_area_head] span')
     if not agree:
         return -1
-    return int(agree[0].text)
+    return int(agree[0].text.replace(',',''))
 
 def parse_status(soup):
     stage_names = '청원시작 청원진행중 청원종료 브리핑'.split()
