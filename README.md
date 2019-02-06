@@ -149,6 +149,7 @@ idx = 51 , name = 기타
 | end_page | int | 10 | 'Last page number' |
 | sleep | float | 1 | 'Sleep time for each petitions' |
 | verbose | Boolean | 'verbose' | action='store_true' |
+| force-all | Boolean | 'verbose' | action='store_true'. If True, set first index with 1 |
 
 ```
 python scraping_petitions.py --verbose --directory test --end_page 3

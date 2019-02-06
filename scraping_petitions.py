@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--end_page', type=int, default=10, help='Last page number')
     parser.add_argument('--sleep', type=float, default=1, help='Sleep time for each petitions')
     parser.add_argument('--verbose', dest='verbose', action='store_true')
+    parser.add_argument('--force-all', dest='force', action='store_true')
 
     args = parser.parse_args()
     directory = args.directory
@@ -20,16 +21,20 @@ def main():
     end_page = args.end_page
     sleep = args.sleep
     verbose = args.verbose
+    force = args.force
 
     if not os.path.exists(directory):
         os.makedirs(directory)
 
     # check last index
-    paths = glob('{}/*.json'.format(directory))
-    paths = sorted(paths, key=lambda x:-int(x.split('/')[-1][:-5]))
-    last_index = find_last_index(paths)
-    if last_index is None:
+    if force:
         last_index = 1
+    else:
+        paths = glob('{}/*.json'.format(directory))
+        paths = sorted(paths, key=lambda x:-int(x.split('/')[-1][:-5]))
+        last_index = find_last_index(paths)
+        if last_index is None:
+            last_index = 1
 
     # verbose print
     if verbose:
