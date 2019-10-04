@@ -7,8 +7,8 @@ from time import gmtime, strftime
 def now():
     return strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
-def get_soup(url):
-    r = requests.get(url)
+def get_soup(url, headers=None):
+    r = requests.get(url, headers=headers, timeout=3)
     html = r.text
     page = BeautifulSoup(html, 'lxml')
     return page

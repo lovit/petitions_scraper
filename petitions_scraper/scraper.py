@@ -26,21 +26,23 @@ def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
     (category, title, url)
     """
     for p in range(begin_page, end_page + 1):
-        url = 'https://www1.president.go.kr/petitions?page={}'.format(p)
+        url = 'https://www1.president.go.kr/petitions?c=0&only=2&page={}&order=1'.format(p)
         try:
             soup = get_soup(url)
+            print(soup.text)
         except:
             print('\nException while getting soup page=%d' % p)
             continue
 
         try:
-            div = soup.select('div[class^=board]')[1]
-            lis = div.select('div[class^=b_list] div[class=bl_body] li')
+            lis = soup.select('ul[class=petition_list] div[class=bl_wrap]')
+            print(len(lis))
             for li in lis:
                 try:
                     link = parse_link(li)
                     yield link
-                except:
+                except Exception as e:
+                    print(e)
                     continue
         except Exception as e:
             print('Exception while parsing link')

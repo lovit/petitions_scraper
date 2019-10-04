@@ -5,7 +5,7 @@ from .utils import get_soup
 from .utils import now
 from .utils import normalize_text
 
-def parse_page(url, include_replies=False, remove_agree_phrase=True):
+def parse_page(url):
     """Parse a petition page
 
     It return parsed informations which is JSON format.
@@ -14,16 +14,15 @@ def parse_page(url, include_replies=False, remove_agree_phrase=True):
       - 상태 : [청원시작, 청원진행중, 청원종료, 브리핑]
       - 청원 개요
       - 청원 동의 수
-      - 댓글
 
     :param url: str format html url
         for example, 'https://www1.president.go.kr/petitions/407329'
-    :param include_replies: Boolean.
-        If True, replies are included in return value.
-        Default is False.
     """
 
-    soup = get_soup(url)
+    headers = {
+        "Referer": "https://www1.president.go.kr/petitions/?c=0&only=2&page=4&order=1",
+    }
+    soup = get_soup(url, headers=headers)
     if not soup:
         raise ValueError('Exception: parse_page. soup is None')
 
@@ -34,18 +33,14 @@ def parse_page(url, include_replies=False, remove_agree_phrase=True):
     num_agree = parse_number_of_agree(soup)
     petition_idx = url.split('/')[-1]
     status = parse_status(soup)
-    if include_replies:
-        replies = get_replies(soup, url, num_agree, remove_agree_phrase)
-    else:
-        replies = None
 
     json_format = _as_json(crawled_at, category, begin, end,
-        content, num_agree, petition_idx, status, replies, title)
+        content, num_agree, petition_idx, status, title)
 
     return json_format
 
 def _as_json(crawled_at, category, begin, end, content,
-    num_agree, petition_idx, status, replies, title):
+    num_agree, petition_idx, status, title):
 
     json_format = {
         'crawled_at' : crawled_at,
@@ -59,15 +54,12 @@ def _as_json(crawled_at, category, begin, end, content,
         'title': title
     }
 
-    if replies is None:
-        return json_format
-
-    json_format['replies'] = replies
     return json_format
 
 def parse_meta(soup):
     meta = soup.select('ul[class=petitionsView_info_list] li')
     if not meta or len(meta) != 4:
+        print(meta)
         raise ValueError('Exception: parse_meta')
     category = meta[0].text.strip()[4:]
     begin = meta[1].text.strip()[4:]
@@ -93,37 +85,3 @@ def parse_status(soup):
         if '현재 상태' in stage.text:
             return name
     return 'Exception'
-
-def get_replies(soup, url, num_replies=0, remove_agree_phrase=False, sleep=0.1):
-    replies = []
-    petition_idx = url.split('/')[-1]
-    num_pages = math.ceil(num_replies/10)
-    for p in range(1, num_pages + 1):
-        try:
-            url_ = url + '?page=%d' % p
-            soup_replies = get_soup(url_)
-            replies_ = _parse_replies(soup_replies)
-            if remove_agree_phrase:
-                replies_ = [r for r in replies_ if not is_agree_phrase(r)]
-            replies += replies_
-            time.sleep(sleep)
-            if p % 10 == 0:
-                print('\r  - petition = {}, reply pages = {} / {}'.format(
-                    petition_idx, p, num_pages), end='')
-        except Exception as e:
-            print(e)
-            print('Unexpected exception (get_replies). Sleep 5 minutes')
-            time.sleep(300)
-    return replies
-
-def is_agree_phrase(text):
-    has_term = '동의' in text
-    return has_term and len(text) <= 10
-
-def _parse_replies(soup):
-    replies = soup.select('div[class=petitionsReply_Reply] li')
-    if not replies:
-        return []
-    replies = [reply.select('div[class=R_R_contents_txt]') for reply in replies]
-    replies = [reply[0].text.strip() for reply in replies if reply]
-    return replies
