@@ -69,17 +69,19 @@ idx = 51 , name = 기타
 
 ### Script 를 이용한 청원 수집
 
-다음의 argument 를 입력하여 청와대 청원 데이터를  directory 에 수집할 수 있습니다. 이전에 수집된 데이터를 바탕으로 이전 시점에 `청원진행중` 이었던 데이터까지 수집합니다. 청원완료된 데이터는 변하지 않기 때문에 그대로 둡니다.
+다음의 argument 를 입력하여 청와대 청원 데이터를  directory 에 수집할 수 있습니다. 청원을 수집하는 과정에서 접속 오류가 자주 나는데, repeats 횟수만큼 수집하지 못한 청원들을 재수집합니다. 그 결과는 index_file 에 기록됩니다. 0 은 청원이 존재하지 않거나 혹은 수집이 실패했음을 의미하며, 1 은 청원 수집이 완료되었음을 의미합니다.
 
 | Argument | Type | Default | Help |
 | --- |--- |--- |--- |
-| directory | str | 'output' | 'JSON storage directory' |
-| begin_page | int | 1 | 'First page number' |
-| end_page | int | 10 | 'Last page number' |
-| sleep | float | 1 | 'Sleep time for each petitions' |
-| verbose | Boolean | 'verbose' | action='store_true' |
-| force-all | Boolean | 'verbose' | action='store_true'. If True, set first index with 1 |
+| directory | str | 'output_dev' | JSON storage directory |
+| first_index | int | -1 | First index of petition |
+| last_index | int | -1 | Last (latest) index of petition |
+| index_file | str | 'index.txt' | Index of petitions to be scraped |
+| sleep | float | 1 | Sleep time for each petitions |
+| repeats | int | 10 | Number of repeating |
+| show_last_index | Boolean | False | store_true |
+| show_result | Boolean | False | store_true |
 
 ```
-python scraping_petitions.py --verbose --directory test --end_page 3
+python scraping_petitions.py --first_index 582480 --last_index 582495
 ```
