@@ -12,6 +12,7 @@ build/
 data/
 tmp/
 output*/
+index.txt
 
 # Jupyter notebook
 .ipynb_checkpoints/

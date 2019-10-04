@@ -5,91 +5,136 @@ import time
 from glob import glob
 from petitions_scraper import parse_page
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--directory', type=str, default='output', help='JSON storage directory')
-    parser.add_argument('--begin_page', type=int, default=1, help='First page number')
-    parser.add_argument('--end_page', type=int, default=10, help='Last page number')
+    parser.add_argument('--directory', type=str, default='output_dev', help='JSON storage directory')
+    parser.add_argument('--first_index', type=int, default=-1, help='First index of petition')
+    parser.add_argument('--last_index', type=int, default=-1, help='Last (latest) index of petition')
+    parser.add_argument('--index_file', type=str, default='index.txt', help='Index of petitions to be scraped')
     parser.add_argument('--sleep', type=float, default=1, help='Sleep time for each petitions')
+    parser.add_argument('--repeats', type=int, default=10, help='Number of repeating')
     parser.add_argument('--verbose', dest='verbose', action='store_true')
     parser.add_argument('--show_last_index', dest='show_last_index', action='store_true')
+    parser.add_argument('--show_result', dest='show_result', action='store_true')
 
     args = parser.parse_args()
     directory = args.directory
-    begin_page = args.begin_page
-    end_page = args.end_page
+    first_index = args.first_index
+    last_index = args.last_index
+    index_file = args.index_file
     sleep = args.sleep
+    repeats = args.repeats
     verbose = args.verbose
     show_last_index = args.show_last_index
+    show_result = args.show_result
 
+    # Initialize directory
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+    # Initialize index file
+    if not os.path.exists(index_file):
+        save_index(index_file, [])
+
+    # Only show last index
     if show_last_index:
-        paths = glob('{}/*.json'.format(directory))
-        paths = sorted(paths, key=lambda x:-int(x.split('/')[-1][:-5]))
-        last_index = find_last_index(paths)
-        if last_index is None:
-            last_index = 1
-        print("Last index is {}".format(last_index))
+        return show_last_index_func(directory)
+
+    # Check index list
+    faileds, successeds = load_index(index_file)
+    if (not faileds and not successeds):
+        faileds = update_target(first_index, last_index)
+        save_index(index_file, faileds)
+
+    # Only show scraping result
+    if show_result:
+        print('num of successed = {}'.format(len(successeds)))
+        print('num of faileds = {}'.format(len(faileds)))
         return None
 
-    """
-    # verbose print
-    if verbose:
-        print('Last (oldest index) = {}\n'.format(last_index))
+    ### main process ###
+    # Repeating
+    for num_tries in range(1, repeats + 1):
 
-    for category, title, url in yield_petition_links(begin_page, end_page, sleep, verbose=False):
-        try:
-            # check index
-            index = int(url.split('/')[-1])
-            if index < last_index:
-                break
+        # reload index
+        faileds, successeds = load_index(index_file)
+        faileds = dict(faileds)
 
-            # get petition
-            petition = parse_page(url, include_replies=False, remove_agree_phrase=False)
-
-            # save
-            path = '{}/{}.json'.format(directory, index)
-            with open(path, 'w', encoding='utf-8') as f:
-                json.dump(petition, f, indent=2, ensure_ascii=False)
-
-            # verbose print
-            if verbose:
-                print('scraped {} (~ {})'.format(index, last_index))
-
-            # sleep
+        # scraping
+        num_successeds = 0
+        for idx, status in sorted(faileds.items()):
+            url = 'https://www1.president.go.kr/petitions/{}'.format(idx)
+            try:
+                petition = parse_page(url)
+                filepath = '{}/{}.json'.format(directory, idx)
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    json.dump(petition, f, ensure_ascii=False, indent=2)
+                print('Successed to scrap petition = {}'.format(idx))
+                faileds[idx] = 1
+                num_successeds += 1
+            except Exception as e:
+                print('Failed to scrap petition = {}'.format(idx))
             time.sleep(sleep)
 
-        except Exception as e:
-            print(e)
-            print('Unexpected exception occurred. Sleep 10 minutes ... ')
-            time.sleep(600)
-    """
+        # save index
+        faileds = list(sorted(faileds.items()))
+        index = faileds + successeds
+        save_index(index_file, index)
 
-def read_file(path):
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
+        # check improvement
+        if num_successeds == 0:
+            print('Stop scraping because there is no more improvement')
+            break
 
-def find_last_index(paths):
-    """
-    Arguments
-    ---------
-    :param paths: list of path
-        Index sorted in decreasing order
+        args = (num_tries, repeats, num_successeds, len(faileds))
+        print('num tries = {} / {}, num successeds = {} / {}'.format(*args))
 
-    Returns
-    -------
-    petition_idx
-    """
-
+def show_last_index_func(directory):
+    paths = glob('{}/*.json'.format(directory))
+    paths = sorted(paths, key=lambda x:-int(x.split('/')[-1][:-5]))
+    last_index = -1
     for path in paths:
-        petition = read_file(path)
+        with open(path, encoding='utf-8') as f:
+            petition = json.load(f)
         petition_idx = petition['petition_idx']
         status = petition['status']
         if status == '청원종료':
-            return int(petition_idx)
+            last_index = max(idx, int(petition_idx))
+    print("Last index is {}".format(last_index))
     return None
+
+def update_target(first_index, last_index):
+    if (first_index == -1) or (last_index == -1):
+        raise ValueError('Prepare index file or set first & last index')
+    faileds = [(idx, 0) for idx in range(first_index, last_index+1)]
+    return faileds
+
+def load_index(path):
+    """
+    status 0 means that this petition has been not yet scraped or failed
+    status 1 means that this petition already scraped successfully.
+    """
+    def parse_status(row):
+        values = row.split()
+        if len(values) == 1:
+            return (int(values[0]), 0)
+        else:
+            return (int(values[0]), int(values[1]))
+
+    with open(path, encoding='utf-8') as f:
+        next(f) # skip head
+        index = [parse_status(row) for row in f]
+
+    faileds = [row for row in index if row[1] == 0]
+    successeds = [row for row in index if row[1] == 1]
+    return faileds, successeds
+
+def save_index(path, index):
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write('index status\n') # write head
+        for idx, status in index:
+            f.write('{} {}\n'.format(idx, status))
 
 if __name__ == '__main__':
     main()
