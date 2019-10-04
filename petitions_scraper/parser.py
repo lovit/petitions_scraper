@@ -59,7 +59,6 @@ def _as_json(crawled_at, category, begin, end, content,
 def parse_meta(soup):
     meta = soup.select('ul[class=petitionsView_info_list] li')
     if not meta or len(meta) != 4:
-        print(meta)
         raise ValueError('Exception: parse_meta')
     category = meta[0].text.strip()[4:]
     begin = meta[1].text.strip()[4:]
