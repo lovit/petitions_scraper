@@ -4,7 +4,6 @@ import os
 import time
 from glob import glob
 from petitions_scraper import parse_page
-from petitions_scraper import yield_petition_links
 
 def main():
     parser = argparse.ArgumentParser()
@@ -13,7 +12,7 @@ def main():
     parser.add_argument('--end_page', type=int, default=10, help='Last page number')
     parser.add_argument('--sleep', type=float, default=1, help='Sleep time for each petitions')
     parser.add_argument('--verbose', dest='verbose', action='store_true')
-    parser.add_argument('--force-all', dest='force', action='store_true')
+    parser.add_argument('--show_last_index', dest='show_last_index', action='store_true')
 
     args = parser.parse_args()
     directory = args.directory
@@ -21,21 +20,21 @@ def main():
     end_page = args.end_page
     sleep = args.sleep
     verbose = args.verbose
-    force = args.force
+    show_last_index = args.show_last_index
 
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    # check last index
-    if force:
-        last_index = 1
-    else:
+    if show_last_index:
         paths = glob('{}/*.json'.format(directory))
         paths = sorted(paths, key=lambda x:-int(x.split('/')[-1][:-5]))
         last_index = find_last_index(paths)
         if last_index is None:
             last_index = 1
+        print("Last index is {}".format(last_index))
+        return None
 
+    """
     # verbose print
     if verbose:
         print('Last (oldest index) = {}\n'.format(last_index))
@@ -66,6 +65,7 @@ def main():
             print(e)
             print('Unexpected exception occurred. Sleep 10 minutes ... ')
             time.sleep(600)
+    """
 
 def read_file(path):
     with open(path, encoding='utf-8') as f:
