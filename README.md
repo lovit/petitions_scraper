@@ -4,27 +4,6 @@
 
 ## Usage
 
-### 청원 목록 가져오기
-
-청와대 청원 게시판의 최근 청원 목록을 가져옵니다. 최근 청원 목록의 begin_page 부터 end_page 까지의 목록을 가져옵니다.
-
-```python
-from petitions_scraper import get_petition_links
-
-links = get_petition_links(begin_page=1, end_page=3)
-```
-
-links 는 (카테고리, 제목, url) 의 tuple 로 이뤄져 있습니다.
-
-```
-[('기타', '정유사, 주유소 특별감사해주세요', 'https://www1.president.go.kr/petitions/320810'),
- ('인권/성평등', "청주 '여중생 집단 폭행 사건'은 쌍방 폭행…10명 입건 ...", 'https://www1.president.go.kr/petitions/320809'),
- ('기타', '제발 가정내 폭력 심각하게 봐 주십시요', 'https://www1.president.go.kr/petitions/320808'),
- ('안전/환경', '정당방위 성립요건 개정 부탁드립니다.', 'https://www1.president.go.kr/petitions/320807'),
-  ...
-]
-```
-
 ### 하나의 청원 페이지에서 정보 가져오기
 
 parse_page 함수에 청원 페이지의 url 을 입력하면 아래의 정보들을 수집할 수 있습니다.
