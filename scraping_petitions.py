@@ -131,6 +131,7 @@ def load_index(path):
     return faileds, successeds
 
 def save_index(path, index):
+    index = sorted(index)
     with open(path, 'w', encoding='utf-8') as f:
         f.write('index status\n') # write head
         for idx, status in index:
