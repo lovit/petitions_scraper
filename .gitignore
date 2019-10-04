@@ -9,8 +9,9 @@ build/
 *.egg-info/
 
 # Experiments
+data/
 tmp/
-output/
+output*/
 
 # Jupyter notebook
 .ipynb_checkpoints/
