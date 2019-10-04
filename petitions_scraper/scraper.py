@@ -25,6 +25,9 @@ def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
     ------
     (category, title, url)
     """
+    raise ValueError("This function doesn't works any more")
+
+    """
     for p in range(begin_page, end_page + 1):
         url = 'https://www1.president.go.kr/petitions?c=0&only=2&page={}&order=1'.format(p)
         try:
@@ -56,6 +59,7 @@ def yield_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
                 p, begin_page, end_page), end='')
             if p % 100 == 0:
                 print()
+    """
 
 
 def get_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
@@ -76,6 +80,10 @@ def get_petition_links(begin_page=1, end_page=10, sleep=0.5, verbose=True):
     list of links. Each link is three column tuple. (category, title, url)
     """
 
+    raise ValueError("This function doesn't works any more")
+
+    """
     links = [link for link in yield_petition_links(begin_page, end_page, sleep, verbose)]
     print('\ngetting petition links was done')
     return links
+    """
