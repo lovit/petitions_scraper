@@ -8,7 +8,7 @@ from petitions_scraper import parse_page
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--directory', type=str, default='output_dev', help='JSON storage directory')
+    parser.add_argument('--directory', type=str, default='output', help='JSON storage directory')
     parser.add_argument('--first_index', type=int, default=-1, help='First index of petition')
     parser.add_argument('--last_index', type=int, default=-1, help='Last (latest) index of petition')
     parser.add_argument('--index_file', type=str, default='index.txt', help='Index of petitions to be scraped')
@@ -100,7 +100,7 @@ def show_last_index_func(directory):
         petition_idx = petition['petition_idx']
         status = petition['status']
         if status == '청원종료':
-            last_index = max(idx, int(petition_idx))
+            last_index = max(last_index, int(petition_idx))
     print("Last index is {}".format(last_index))
     return None
 
