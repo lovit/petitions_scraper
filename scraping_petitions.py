@@ -9,8 +9,8 @@ from petitions_scraper import parse_page
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--directory', type=str, default='output', help='JSON storage directory')
-    parser.add_argument('--first_index', type=int, default=-1, help='First index of petition')
-    parser.add_argument('--last_index', type=int, default=-1, help='Last (latest) index of petition')
+    parser.add_argument('--first_index', type=int, default=539390, help='First index of petition')
+    parser.add_argument('--last_index', type=int, default=582491, help='Last (latest) index of petition')
     parser.add_argument('--index_file', type=str, default='index.txt', help='Index of petitions to be scraped')
     parser.add_argument('--sleep', type=float, default=1, help='Sleep time for each petitions')
     parser.add_argument('--repeats', type=int, default=10, help='Number of repeating')
