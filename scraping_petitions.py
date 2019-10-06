@@ -64,7 +64,7 @@ def main():
         # scraping
         num_successeds = 0
         num_faileds = len(faileds)
-        for i, (idx, status) in sorted(faileds.items()):
+        for i, (idx, status) in enumerate(sorted(faileds.items())):
             url = 'https://www1.president.go.kr/petitions/{}'.format(idx)
             try:
                 petition = parse_page(url)
