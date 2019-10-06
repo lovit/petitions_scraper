@@ -67,6 +67,9 @@ def main():
             url = 'https://www1.president.go.kr/petitions/{}'.format(idx)
             try:
                 petition = parse_page(url)
+                if petition == -1: # 비공개청원
+                    faileds[idx] = -1
+                    continue
                 filepath = '{}/{}.json'.format(directory, idx)
                 with open(filepath, 'w', encoding='utf-8') as f:
                     json.dump(petition, f, ensure_ascii=False, indent=2)
@@ -127,7 +130,7 @@ def load_index(path):
         index = [parse_status(row) for row in f]
 
     faileds = [row for row in index if row[1] == 0]
-    successeds = [row for row in index if row[1] == 1]
+    successeds = [row for row in index if (row[1] == 1 or row[1] == -1)]
     return faileds, successeds
 
 def save_index(path, index):

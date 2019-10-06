@@ -26,6 +26,9 @@ def parse_page(url):
     if not soup:
         raise ValueError('Exception: parse_page. soup is None')
 
+    if is_closed_petition(soup):
+        return -1
+
     crawled_at = now()
     category, begin, end = parse_meta(soup)
     title = soup.select('h3[class=petitionsView_title]')[0].text
@@ -55,6 +58,13 @@ def _as_json(crawled_at, category, begin, end, content,
     }
 
     return json_format
+
+def is_closed_petition(soup):
+    text = '청원 요건에 위배되어 관리자에 의해 비공개된 청원입니다.'
+    try:
+        return text == soup.select('span[class=text]')[0].text.strip()
+    except:
+        return False
 
 def parse_meta(soup):
     meta = soup.select('ul[class=petitionsView_info_list] li')
