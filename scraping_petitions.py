@@ -63,7 +63,8 @@ def main():
 
         # scraping
         num_successeds = 0
-        for idx, status in sorted(faileds.items()):
+        num_faileds = len(faileds)
+        for i, (idx, status) in sorted(faileds.items()):
             url = 'https://www1.president.go.kr/petitions/{}'.format(idx)
             try:
                 petition = parse_page(url)
@@ -73,11 +74,13 @@ def main():
                 filepath = '{}/{}.json'.format(directory, idx)
                 with open(filepath, 'w', encoding='utf-8') as f:
                     json.dump(petition, f, ensure_ascii=False, indent=2)
-                print('Successed to scrap petition = {}, {} / {} tries'.format(idx, num_tries, repeats))
+                args = (idx, i, num_faileds, num_tries, repeats)
+                print('Successed to scrap petition = {} ({} / {}), {} / {} tries'.format(*args))
                 faileds[idx] = 1
                 num_successeds += 1
             except Exception as e:
-                print('Failed to scrap petition = {}, {} / {} tries'.format(idx, num_tries, repeats))
+                args = (idx, i, num_faileds, num_tries, repeats)
+                print('Failed to scrap petition = {} ({} / {}), {} / {} tries'.format(*args))
             time.sleep(sleep)
 
         # save index
